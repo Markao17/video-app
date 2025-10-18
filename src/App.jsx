@@ -1,17 +1,24 @@
 import './App.css'
-import Card from './Card'
+import Search from './components/Search'
+import {useState} from 'react'
 
 function App() {
+  const [searchTerm, setSearchTerm] = useState('');
+
 
   return (
-    <div>
-      <h1 className='text-3xl font-bold underline'>Movies</h1>
-      <div className='grid gap-2 grid-cols-3'>
-        <Card title="The Dark Knight" />
-        <Card title="Star Wars" />
-        <Card title="The Lord of the Rings" />
+    <main>
+      <div className="pattern" />
+
+      <div className="wrapper">
+        <header>
+          {/* <img src="./logo.png" alt="Logo" className=' max-w-32 mx-auto'/> */}
+          <img src="./hero-img.png" alt="Hero Image" />
+          <h1>Find the best <span className="text-gradient">Movies</span> for you.</h1>
+        </header>
+        <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
       </div>
-    </div>
+    </main>
   )
 }
 
