@@ -4,7 +4,7 @@ import AnimeCard from './AnimeCard';
 
 const ListSection = ({title, isLoading, errorMessage, animeList}) => {
   return (
-    <section>
+    <section className='all-animes'>
         <h2 className='mt-10 mb-6'>{title}</h2>
         {isLoading ? (
         <div className="flex justify-center items-center my-4">
@@ -13,11 +13,10 @@ const ListSection = ({title, isLoading, errorMessage, animeList}) => {
         ) : errorMessage ? (
         <p className="text-red-500">{errorMessage}</p>
         ) : (
-        <ul className='grid grid-cols-1 gap-5 xs:grid-cols-2 md:grid-cols-3 lg:grid-cols-4'>
+        <ul>
             {animeList.map(anime => {
-            console.log(anime.attributes);
             return (
-                <AnimeCard anime={anime.attributes} />
+                <AnimeCard key={anime.id} anime={anime.attributes} />
             )
             })}
         </ul>

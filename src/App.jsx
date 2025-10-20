@@ -19,6 +19,7 @@ const App = () => {
   const [errorMessage, setErrorMessage] = useState(null);
   const [animeListByRank, setAnimeListByRank] = useState([]);
   const [animeListByPopularity, setAnimeListByPopularity] = useState([]);
+  const [animeSearchResults, setAnimeSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
 
   const fetchAnimeRanked = async () => {
@@ -48,7 +49,7 @@ const App = () => {
     }
   }
 
-    const fetchAnimePopularity = async () => {
+  const fetchAnimePopularity = async () => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
@@ -75,10 +76,46 @@ const App = () => {
     }
   }
 
+  const fetchSearchResults = async () => {
+    setIsLoading(true);
+    setErrorMessage(null);
+    try {
+      const endpoint = `${API_BASE_URL}/anime?filter[text]=${searchTerm}`;
+      const response = await fetch(endpoint, API_OPTIONS);
+      console.log(endpoint);
+      if (!response.ok) {
+        throw new Error('Failed to fetch anime');
+      }
+      const data = await response.json();
+      if ( data.Response === 'False' ) {
+        setErrorMessage(data.Error || 'Failed to fetch anime');
+        setAnimeSearchResults([]);
+        setIsLoading(false);
+        return;
+      }
+      setAnimeSearchResults(data.data);
+    }
+    catch (error) {
+      console.log(`Error fetching anime: ${error}`);
+      setErrorMessage(`Error fetching anime: ${error}`);
+    }
+    finally {
+      setIsLoading(false);
+    }
+  }
+
   useEffect(() => {
     fetchAnimeRanked();
     fetchAnimePopularity();
   },[])
+
+  useEffect(() => {
+    if (searchTerm.length > 2) {
+      fetchSearchResults();
+    }
+
+    console.log(animeSearchResults);
+  }, [searchTerm])
 
 
   return (
@@ -91,6 +128,13 @@ const App = () => {
           <img src="./hero-img.png" alt="Hero Image" />
           <h1>Find the best <span className="text-gradient">Animes</span> for you.</h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+          <ListSection
+            title="Search Results"
+            sort="searchResults"
+            isLoading={isLoading}
+            errorMessage={errorMessage}
+            animeList={animeSearchResults}
+          />
         </header>
         <ListSection
           title="Top Ranked Animes"
