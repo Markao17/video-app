@@ -2,6 +2,7 @@ import './App.css'
 import Search from './components/Search'
 import {useState, useEffect} from 'react'
 import ListSection from './components/ListSection';
+import { useDebounce } from 'react-use';
 
 const API_BASE_URL = 'https://kitsu.io/api/edge';
 const API_TOKEN = import.meta.env.VITE_KITSU_ACCESS_TOKEN;
@@ -17,16 +18,23 @@ const API_OPTIONS = {
 const App = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [errorMessage, setErrorMessage] = useState(null);
-  const [animeListByRank, setAnimeListByRank] = useState([]);
+  const [animeList, setAnimeList] = useState([]);
   const [animeListByPopularity, setAnimeListByPopularity] = useState([]);
-  const [animeSearchResults, setAnimeSearchResults] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
+  const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('');
 
-  const fetchAnimeRanked = async () => {
+  useDebounce(() => {
+    setDebouncedSearchTerm(searchTerm);
+  }, 500, [searchTerm]);
+
+  const fetchAnimeList = async () => {
     setIsLoading(true);
     setErrorMessage(null);
+
     try {
-      const endpoint = `${API_BASE_URL}/anime?sort=ratingRank`;
+      const endpoint = debouncedSearchTerm.length > 2
+        ? `${API_BASE_URL}/anime?filter[text]=${encodeURIComponent(debouncedSearchTerm)}`
+      : `${API_BASE_URL}/anime?sort=ratingRank`;
       const response = await fetch(endpoint, API_OPTIONS);
       if (!response.ok) {
         throw new Error('Failed to fetch anime');
@@ -34,11 +42,8 @@ const App = () => {
       const data = await response.json();
       if ( data.Response === 'False' ) {
         setErrorMessage(data.Error || 'Failed to fetch anime');
-        setAnimeListByRank([]);
-        setIsLoading(false);
-        return;
       }
-      setAnimeListByRank(data.data);
+      setAnimeList(data.data);
     }
     catch (error) {
       console.log(`Error fetching anime: ${error}`);
@@ -76,46 +81,13 @@ const App = () => {
     }
   }
 
-  const fetchSearchResults = async () => {
-    setIsLoading(true);
-    setErrorMessage(null);
-    try {
-      const endpoint = `${API_BASE_URL}/anime?filter[text]=${searchTerm}`;
-      const response = await fetch(endpoint, API_OPTIONS);
-      console.log(endpoint);
-      if (!response.ok) {
-        throw new Error('Failed to fetch anime');
-      }
-      const data = await response.json();
-      if ( data.Response === 'False' ) {
-        setErrorMessage(data.Error || 'Failed to fetch anime');
-        setAnimeSearchResults([]);
-        setIsLoading(false);
-        return;
-      }
-      setAnimeSearchResults(data.data);
-    }
-    catch (error) {
-      console.log(`Error fetching anime: ${error}`);
-      setErrorMessage(`Error fetching anime: ${error}`);
-    }
-    finally {
-      setIsLoading(false);
-    }
-  }
+  useEffect(() => {
+    fetchAnimeList();
+  },[debouncedSearchTerm])
 
   useEffect(() => {
-    fetchAnimeRanked();
     fetchAnimePopularity();
   },[])
-
-  useEffect(() => {
-    if (searchTerm.length > 2) {
-      fetchSearchResults();
-    }
-
-    console.log(animeSearchResults);
-  }, [searchTerm])
 
 
   return (
@@ -124,24 +96,16 @@ const App = () => {
 
       <div className="wrapper">
         <header>
-          {/* <img src="./logo.png" alt="Logo" className=' max-w-32 mx-auto'/> */}
           <img src="./hero-img.png" alt="Hero Image" />
           <h1>Find the best <span className="text-gradient">Animes</span> for you.</h1>
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
-          <ListSection
-            title="Search Results"
-            sort="searchResults"
-            isLoading={isLoading}
-            errorMessage={errorMessage}
-            animeList={animeSearchResults}
-          />
         </header>
         <ListSection
-          title="Top Ranked Animes"
+          title={searchTerm.length > 2 ? "Search Results" : "Top Ranked Animes"}
           sort="ratingRank"
           isLoading={isLoading}
           errorMessage={errorMessage}
-          animeList={animeListByRank}
+          animeList={animeList}
         />
         <ListSection
           title="Animes by Popularity"

@@ -132,7 +132,7 @@
       @apply text-sm text-gray-100;
     }
 
-    & .content .lang {
+    & .content .show-type {
       @apply capitalize text-gray-100 font-medium text-base;
     }
 
