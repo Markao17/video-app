@@ -18,7 +18,7 @@ const Search = ({searchTerm, setSearchTerm}) => {
         <p className='text-white text-sm'>you searched for: <span className='text-gradient'>{searchTerm}</span></p>
       ) : (
         <p className='text-white text-sm'>Please enter at least 3 characters to search for an anime</p>
-      )};
+      )}
     </>
   )
 }

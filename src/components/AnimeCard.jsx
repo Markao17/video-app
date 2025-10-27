@@ -7,14 +7,14 @@ const AnimeCard = ({anime}) => {
     <li className='anime-card'>
       <img src={posterImage ? posterImage.small : '/no-image.png'} alt={canonicalTitle} />
       <div className="mt-4">
-        <h3>{canonicalTitle}</h3>
+        <h3>{canonicalTitle ? canonicalTitle : 'N/A'}</h3>
         <div className="content">
           <div className="rating">
             <img src="./star.svg" alt="star icon" />
             <p>{averageRating && !isNaN(parseFloat(averageRating)) ? parseFloat(averageRating).toFixed(1) : 'N/A'}</p>
           </div>
           <span>·</span>
-          <p className='show-type'>{showType}</p>
+          <p className='show-type'>{showType ? showType : 'N/A'}</p>
           <span>·</span>
           <p className='year'>{startDate ? startDate.split('-')[0] : 'N/A'}</p>
           <br />
