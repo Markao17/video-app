@@ -5,7 +5,7 @@ import ListSection from './components/ListSection';
 import TrendingAnimes from './components/TrendingAnimes';
 import { useDebounce } from 'react-use';
 import { updateSearchCount, getTrendingAnimes } from './supabase-client';
-import { Analytics } from "@vercel/analytics/react"
+import AnalyticsWrapper from './components/AnalyticsWrapper';
 
 const API_BASE_URL = 'https://kitsu.io/api/edge';
 const API_TOKEN = import.meta.env.VITE_KITSU_ACCESS_TOKEN;
@@ -112,7 +112,7 @@ const App = () => {
 
   return (
     <main>
-      <Analytics/>
+      <AnalyticsWrapper />
       <div className="pattern" />
 
       <div className="wrapper">
