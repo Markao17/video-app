@@ -1,7 +1,6 @@
 import React from 'react'
 
 const TrendingAnimes = ({trendingAnimes}) => {
-  console.log(trendingAnimes, 'animeList');
   return (
     <ul>
       {trendingAnimes.map((anime, index) => (
