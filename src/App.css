@@ -51,3 +51,18 @@
 .read-the-docs {
   color: #888;
 }
+
+.modal-section {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+
+  &.overview {
+    align-items: flex-start;
+  }
+
+  h4 {
+    width: 100%;
+    flex: 0 0 9rem;
+  }
+}

@@ -140,6 +140,34 @@
       @apply text-gray-100 font-medium text-base;
     }
   }
+
+  .details-table {
+    @apply space-y-3;
+
+    & .table-row {
+      @apply flex flex-col sm:flex-row sm:items-start gap-2 sm:gap-6 py-3 border-b border-gray-100/10 last:border-b-0;
+    }
+
+    & .table-label {
+      @apply text-gray-100 font-medium text-sm min-w-[140px] flex-shrink-0;
+    }
+
+    & .table-value {
+      @apply text-white/90 text-sm leading-relaxed flex-1;
+    }
+
+    & .table-value.capitalize {
+      @apply capitalize;
+    }
+
+    & .titles-list {
+      @apply space-y-1;
+    }
+
+    & .language-tag {
+      @apply text-gray-100 font-medium mr-2;
+    }
+  }
 }
 
 @utility text-gradient {

@@ -38,8 +38,8 @@ const App = () => {
 
     try {
       const endpoint = debouncedSearchTerm.length > 2
-        ? `${API_BASE_URL}/anime?filter[text]=${encodeURIComponent(debouncedSearchTerm)}`
-      : `${API_BASE_URL}/anime?sort=ratingRank`;
+        ? `${API_BASE_URL}/anime?page[limit]=12&filter[text]=${encodeURIComponent(debouncedSearchTerm)}`
+      : `${API_BASE_URL}/anime?page[limit]=12&sort=ratingRank`;
       const response = await fetch(endpoint, API_OPTIONS);
       if (!response.ok) {
         throw new Error('Failed to fetch anime');
@@ -67,7 +67,7 @@ const App = () => {
     setIsLoading(true);
     setErrorMessage(null);
     try {
-      const endpoint = `${API_BASE_URL}/anime?sort=popularityRank`;
+      const endpoint = `${API_BASE_URL}/anime?page[limit]=12&sort=popularityRank`;
       const response = await fetch(endpoint, API_OPTIONS);
       if (!response.ok) {
         throw new Error('Failed to fetch anime');

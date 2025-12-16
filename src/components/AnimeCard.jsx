@@ -1,10 +1,14 @@
-import React from 'react'
+import { useState } from 'react';
+import AnimeModal from './AnimeModal';
 
 const AnimeCard = ({anime}) => {
+  const [isOpen, setIsOpen] = useState(false);
 
-  const {id, canonicalTitle, coverImage, description, favoritesCount, posterImage, ratingRank, youtubeVideoId, averageRating, showType, startDate } = anime;
+  console.log(anime, 'anime');
+  const {id, canonicalTitle, posterImage, youtubeVideoId, averageRating, showType, startDate } = anime;
   return (
-    <li className='anime-card'>
+    <>
+    <li className='anime-card' onClick={() => setIsOpen(true)}>
       <img src={posterImage ? posterImage.small : '/no-image.png'} alt={canonicalTitle} />
       <div className="mt-4">
         <h3>{canonicalTitle ? canonicalTitle : 'N/A'}</h3>
@@ -24,6 +28,8 @@ const AnimeCard = ({anime}) => {
         </div>
       </div>
     </li>
+    <AnimeModal isOpen={isOpen} setIsOpen={setIsOpen} anime={anime} />
+    </>
   )
 }
 
